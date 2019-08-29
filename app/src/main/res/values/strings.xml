@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Dicoding Test</string>
+    <string name="my_email">My Email</string>
+    <string name="my_name">My Name</string>
+    <string name="name">Rahmat Haryadi</string>
+    <string name="email">rahmat.haryadi95@gmail.com</string>
+    <string name="version">myDicodingTest v1.0</string>
+</resources>
