@@ -3,29 +3,39 @@ package com.rahmatharyadi.dicodingtest;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.rahmatharyadi.dicodingtest.adapter.CardViewStartupAdapter;
 import com.rahmatharyadi.dicodingtest.model.ModelStartup;
 import com.rahmatharyadi.dicodingtest.model.Startup;
 import com.rahmatharyadi.dicodingtest.retrofit.APIUtilities;
 import com.rahmatharyadi.dicodingtest.retrofit.RequestAPIServices;
+import com.rahmatharyadi.dicodingtest.utility.Constanta;
 import com.rahmatharyadi.dicodingtest.utility.LoadingClass;
 
 import java.util.ArrayList;
@@ -41,11 +51,25 @@ public class MainActivity extends AppCompatActivity {
     private Context context = this;
 
     private RequestAPIServices apiServices;
-
     boolean doubleBackToExitPressedOnce = false;
+
+    private int done = 0;
 
     @BindView(R.id.rvStartup)
     RecyclerView rvStartup;
+
+
+    private BroadcastReceiver mNetworkDetectReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            checkInternetConnection();
+        }
+    };
+
+    private AlertDialog mInternetDialog;
+    private boolean isConnected;
+
 
     private ArrayList<Startup> listStartups = new ArrayList<>();
 
@@ -55,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getAPIStartup();
+        registerReceiver(mNetworkDetectReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         ActionBar actionBar = getSupportActionBar();
         TextView tv = new TextView(getApplicationContext());
@@ -72,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setCustomView(tv);
 
         rvStartup.setHasFixedSize(true);
+
+        isConnected = false;
+        registerReceiver(mNetworkDetectReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
 
     @Override
@@ -110,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ModelStartup> call, @NonNull Response<ModelStartup> response) {
                 loading.dismiss();
                 if (response.code() == 200) {
+                    done = 1;
                     for (int i = 0; i < response.body().getData().size(); i++) {
                         Startup startup = new Startup();
                         startup.setName(response.body().getData().get(i).getName());
@@ -123,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                     showRecyclerCardView();
 
                 } else {
-                    System.out.println("Masuk Response : " + response.code());
                     Log.d("Test", "onResponse: " + response.message());
                 }
             }
@@ -131,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ModelStartup> call, @NonNull Throwable t) {
                 loading.dismiss();
-                Toast.makeText(context, "Login User onFailure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                System.out.println("ONFAILUR DB = " + t.getMessage());
+//                Toast.makeText(context, "onFailure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Check Your Connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,6 +183,68 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        unregisterReceiver(mNetworkDetectReceiver);
+        super.onDestroy();
+    }
+
+    private void checkInternetConnection() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = manager.getActiveNetworkInfo();
+
+        if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
+            isConnected =false;
+
+            if(done == 0){
+                getAPIStartup();
+            }
+            //Toast.makeText(getApplicationContext(),"INTERNET NOT CONNECTED",Toast.LENGTH_SHORT);
+            showNoConnectionSnackBar("Connected", isConnected, 1500);
+        } else {
+            isConnected= true;
+//               Toast.makeText(getApplicationContext(),"INTERNET  CONNECTED",Toast.LENGTH_SHORT);
+            showNoConnectionSnackBar("No internet connection found", isConnected,5000);
+
+        }
+    }
+
+    private  void showNoConnectionSnackBar(String message, boolean isConnected, int duration) {
+
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, duration);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView
+                .findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+        if (isConnected){
+            sbView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        }else{
+            sbView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            snackbar.setAction("Turn On", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent internetOptionsIntent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivityForResult(internetOptionsIntent, Constanta.WIFI_ENABLE_REQUEST);
+                }
+            });
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+        snackbar.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constanta.WIFI_ENABLE_REQUEST) {
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
