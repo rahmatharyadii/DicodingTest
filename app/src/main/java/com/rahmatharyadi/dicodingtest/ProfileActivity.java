@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
     private Context context = this;
 
+    @BindView(R.id.myTVMarqueen)
+    TextView myTVMarqueen;
     @BindView(R.id.myName)
     TextView myName;
     @BindView(R.id.myEmail)
@@ -32,6 +34,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        myTVMarqueen.setSelected(true);
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

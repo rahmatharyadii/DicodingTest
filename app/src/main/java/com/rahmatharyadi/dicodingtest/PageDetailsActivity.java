@@ -51,7 +51,7 @@ public class PageDetailsActivity extends AppCompatActivity {
                 .into(imageStartups);
         detailDescriptions.setText(description);
 
-        buttonPage.setText("Shopping at "+name+" >");
+        buttonPage.setText("Shopping at " + name + " >");
 
         buttonPage.setOnClickListener(new View.OnClickListener() {
             @Override

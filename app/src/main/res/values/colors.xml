@@ -9,4 +9,5 @@
     <color name="Transparent">#00000000</color>
     <color name="wave">#3F51B5</color>
     <color name="backgroundwave">#2196F3</color>
+    <color name="marqueeBackground">#402196F3</color>
 </resources>
