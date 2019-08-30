@@ -57,7 +57,6 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/myName" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/batasGambar"
         android:layout_width="0dp"
