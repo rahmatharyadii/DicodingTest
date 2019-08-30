@@ -1,15 +1,20 @@
 package com.rahmatharyadi.dicodingtest;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,8 +26,6 @@ import butterknife.ButterKnife;
 public class PageDetailsActivity extends AppCompatActivity {
     private Context context = this;
 
-    @BindView(R.id.detailNames)
-    TextView detailNames;
     @BindView(R.id.imageStartups)
     ImageView imageStartups;
     @BindView(R.id.detailDescriptions)
@@ -42,7 +45,6 @@ public class PageDetailsActivity extends AppCompatActivity {
         String picture = intent.getStringExtra("picture");
         final String web = intent.getStringExtra("web");
 
-        detailNames.setText(name);
         Glide.with(context)
                 .load(picture)
                 .apply(new RequestOptions().override(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -58,6 +60,26 @@ public class PageDetailsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        ActionBar actionBar = getSupportActionBar();
+        TextView tv = new TextView(getApplicationContext());
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/UbuntuMono-B.ttf");
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tv.setLayoutParams(lp);
+        tv.setText(name);
+        tv.setTextSize(25);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextColor(Color.WHITE);
+        tv.setTypeface(typeface);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(tv);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 }

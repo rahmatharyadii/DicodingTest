@@ -28,14 +28,17 @@
 
         <TextView
             android:id="@+id/startupName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:background="@drawable/custom_content_underline"
             android:fontFamily="serif-monospace"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHeight_percent="0.2"
+            card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             tools:hint="Judul" />
 

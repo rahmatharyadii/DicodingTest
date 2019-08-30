@@ -5,4 +5,5 @@
     <string name="name">Rahmat Haryadi</string>
     <string name="email">rahmat.haryadi95@gmail.com</string>
     <string name="version">myDicodingTest v1.0</string>
+    <string name="listStartup">List Startup</string>
 </resources>

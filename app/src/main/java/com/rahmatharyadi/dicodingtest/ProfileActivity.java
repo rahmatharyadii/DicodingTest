@@ -93,4 +93,9 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        //doNothing;
+    }
+
 }

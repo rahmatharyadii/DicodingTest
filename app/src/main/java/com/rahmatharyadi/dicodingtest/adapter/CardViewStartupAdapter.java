@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,12 +44,9 @@ public class CardViewStartupAdapter extends RecyclerView.Adapter<CardViewStartup
                 .apply(new RequestOptions().override(350, 550))
                 .into(holder.startupIcon);
 
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(holder.itemView.getContext(), "Kamu memilih " +
-                        listStartups.get(holder.getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(holder.itemView.getContext(), PageDetailsActivity.class);
                 intent.putExtra("name", listStartups.get(position).getName());
@@ -58,6 +54,7 @@ public class CardViewStartupAdapter extends RecyclerView.Adapter<CardViewStartup
                 intent.putExtra("picture", listStartups.get(position).getPicture());
                 intent.putExtra("web", listStartups.get(position).getWeb());
                 holder.itemView.getContext().startActivity(intent);
+
             }
         });
     }
