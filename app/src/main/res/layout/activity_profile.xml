@@ -11,15 +11,38 @@
         android:id="@+id/buttonWA"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_button"
+        android:background="@drawable/custom_button"
         android:fontFamily="monospace"
         android:text="WhatsApp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/backgroundWave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myEmail"
         app:layout_constraintWidth_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/backgroundWave"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_wave"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.2" />
+
+    <TextView
+        android:id="@+id/myName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_content_underline"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:hint="@string/my_name"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/batasGambar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/myEmail"
@@ -29,20 +52,11 @@
         android:fontFamily="monospace"
         android:gravity="center"
         android:hint="@string/my_email"
+        android:textColor="@color/black"
         android:textSize="15dp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/myName" />
 
-    <TextView
-        android:id="@+id/myName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="cursive"
-        android:gravity="center"
-        android:hint="@string/my_name"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/batasGambar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/batasGambar"
@@ -58,8 +72,8 @@
             android:id="@+id/photoProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="MissingConstraints"
             tools:src="@android:color/darker_gray" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
